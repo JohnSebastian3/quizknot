@@ -26,9 +26,13 @@ const categoryArr = [
 ];
 
 
+const quizQuestions = [];
+const correctAnswers = [];
+const incorrectAnswers = [];
 
-
-
+let currentQuestion = 0;
+let currIncorrectQuestion = 0;
+let currCorrectQuestion = 0;
 
 // All parameters are entered as idexes
 let categoryIndex = 0;
@@ -43,7 +47,7 @@ document.querySelector('#category').addEventListener('change', e => {
 			return res.json();
 		})
 		.then(data => {
-			console.log(data);
+			// console.log(data);
 		})
 });
 
@@ -68,7 +72,7 @@ function getQuiz() {
 		type = 'multiple'
 	}
 
-	let currentQuestion = 0;
+
 
 	fetch(`https://opentdb.com/api.php?amount=${numQuestions}&category=${categoryIndex}&difficulty=${difficulty.toLocaleLowerCase()}&type=${type}`)
       .then(res => res.json()) // parse response as JSON
@@ -76,10 +80,14 @@ function getQuiz() {
 				
 				// CURRENT PROBLEM: GET QUESTIONS IN SEQUENCE ONE AFTER THE OTHER
 				// ALSO KEEP TRACK OF SCORE
-				getQuestion(questionNum);
-				document.querySelector('#question').innerHTML = data.results[0].question;
 
-		
+				for(let i = 0; i < data.results.length; i++) {
+					quizQuestions.push(data.results[i].question);
+					correctAnswers.push(data.results[i].correct_answer);
+					incorrectAnswers.push(data.results[i].incorrect_answers); // this is going to be an array within an array! Watch out for this
+				}
+				displayQuestion();
+
 				console.log(data);
       })
       .catch(err => {
@@ -87,28 +95,89 @@ function getQuiz() {
       });
 }
 
+function displayQuestion() {
+	if(currentQuestion >= quizQuestions.length) {
+		alert('Quiz Done!');
+		return;
+	}
+	 console.log(incorrectAnswers);
 
-fetch(QUIZ_URL)
-      .then(res => res.json()) // parse response as JSON
-      .then(data => {
-        console.log(data)
-      })
-      .catch(err => {
-          console.log(`error ${err}`)
-      });
+	 let answerPosition = [1,2,3,4];
+	 answerPosition = suffle(answerPosition);
+	 console.log(answerPosition);
+	 let currAnswerPosition = 0;
 
-function getFetch(){
-  const choice = document.querySelector('input').value
-  const url = 'https://pokeapi.co/api/v2/pokemon/'+choice
-
-  fetch(url)
-      .then(res => res.json()) // parse response as JSON
-      .then(data => {
-        console.log(data)
-      })
-      .catch(err => {
-          console.log(`error ${err}`)
-      });
+	document.querySelector('#question').innerHTML = quizQuestions[currentQuestion];
+	document.querySelector(`#answer${answerPosition[currAnswerPosition++]}`).innerHTML = incorrectAnswers[currentQuestion][currIncorrectQuestion++];
+	document.querySelector(`#answer${answerPosition[currAnswerPosition++]}`).innerHTML = incorrectAnswers[currentQuestion][currIncorrectQuestion++];
+	document.querySelector(`#answer${answerPosition[currAnswerPosition++]}`).innerHTML = incorrectAnswers[currentQuestion][currIncorrectQuestion++];
+	document.querySelector(`#answer${answerPosition[currAnswerPosition++]}`).innerHTML = correctAnswers[currCorrectQuestion++];
+	checkAnswer(currCorrectQuestion - 1);
+	document.querySelector('#next').addEventListener('click', e => {
+		answerPosition = suffle(answerPosition);
+		console.log(answerPosition);
+		currIncorrectQuestion = 0;
+		currAnswerPosition = 0;
+		++currentQuestion;
+		document.querySelector(`#answer${answerPosition[currAnswerPosition++]}`).innerHTML = incorrectAnswers[currentQuestion][currIncorrectQuestion++];
+		document.querySelector(`#answer${answerPosition[currAnswerPosition++]}`).innerHTML = incorrectAnswers[currentQuestion][currIncorrectQuestion++];
+		document.querySelector(`#answer${answerPosition[currAnswerPosition++]}`).innerHTML = incorrectAnswers[currentQuestion][currIncorrectQuestion++];
+		document.querySelector(`#answer${answerPosition[currAnswerPosition++]}`).innerHTML = correctAnswers[currCorrectQuestion++];
+		document.querySelector('#question').innerHTML = quizQuestions[currentQuestion];
+		checkAnswer(currCorrectQuestion - 1);
+	})
+	
 }
 
-function getQuestion()
+function checkAnswer(index) {
+	document.querySelector('#answer1').addEventListener('click', e => {
+		console.log(correctAnswers[index]);
+		if(e.target.innerHTML === correctAnswers[index]) {
+			updateScore();
+		}
+	})
+
+	document.querySelector('#answer2').addEventListener('click', e => {
+	
+		if(e.target.innerHTML === correctAnswers[index]) {
+			updateScore();
+		}
+	})
+
+
+	document.querySelector('#answer3').addEventListener('click', e => {
+	
+		if(e.target.innerHTML === correctAnswers[index]) {
+			updateScore();
+		}
+	})
+
+
+	document.querySelector('#answer4').addEventListener('click', e => {
+	
+		if(e.target.innerHTML === correctAnswers[index]) {
+			updateScore();
+		}
+	})
+
+
+}
+
+function suffle(arr) {
+	let currentIndex = arr.length,  randomIndex;
+
+  // While there remain elements to shuffle.
+  while (currentIndex != 0) {
+
+    // Pick a remaining element.
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex--;
+
+    // And swap it with the current element.
+    [arr[currentIndex], arr[randomIndex]] = [
+      arr[randomIndex], arr[currentIndex]];
+  }
+
+  return arr ;
+}
+
