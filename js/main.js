@@ -5,6 +5,7 @@ const answer3 = document.querySelector('#answer3');
 const answer4 = document.querySelector('#answer4');
 const nextButton = document.querySelector('#next');
 const playAgain = document.querySelector('#play-again');
+const score = document.querySelector('#score');
 
 answer1.classList.add('hidden');
 answer2.classList.add('hidden');
@@ -108,9 +109,10 @@ function getQuiz() {
 					incorrectAnswers.push(data.results[i].incorrect_answers); // this is going to be an array within an array! Watch out for this
 				}
 				if(type === 'multiple') {
-
+					score.innerHTML = `0/${correctAnswers.length}`;
 					displayQuestion();
 				} else {
+					score.innerHTML = `0/${correctAnswers.length}`;
 					displayTrueFalse();
 				}
 				console.log(data);
@@ -149,7 +151,7 @@ function displayTrueFalse(){
 	
 		
 			document.querySelector('#final').innerHTML = `You scored a final score of ${rightAnswers}/${correctAnswers.length}. 
-				That's a ${(rightAnswers/correctAnswers.length) * 100}%! To play again, just refresh this page!`
+				That's a ${((rightAnswers/correctAnswers.length) * 100).toFixed(2)}%! To play again, just refresh this page!`
 			playAgain.classList.remove('hidden');
 			playAgain.addEventListener('click', e => {
 				location.reload(true);
@@ -217,7 +219,7 @@ function displayQuestion() {
 			answer3.disabled = true;
 			answer4.disabled = true;
 			document.querySelector('#final').innerHTML = `You scored a final score of ${rightAnswers}/${correctAnswers.length}. 
-				That's a ${(rightAnswers/correctAnswers.length) * 100}%! To play again, just refresh this page!`
+				That's a ${((rightAnswers/orrectAnswers.length) * 100).toFixed(2)}%! To play again, just refresh this page!`
 			playAgain.classList.remove('hidden');
 			playAgain.addEventListener('click', e => {
 				location.reload(true);
@@ -265,6 +267,7 @@ answer1.addEventListener('click', e => {
 			answer1.classList.add('correct');
 			answer1.disabled = true;
 			answer2.disabled = true;
+			updateScore(correctAnswers.length);
 		} else {
 			answer1.classList.add('incorrect');
 			answer2.classList.add('correct');
@@ -308,6 +311,8 @@ answer2.addEventListener('click', e => {
 			answer2.classList.add('correct');
 			answer1.disabled = true;
 			answer2.disabled = true;
+			updateScore(correctAnswers.length);
+
 		} else {
 			answer2.classList.add('incorrect');
 			answer1.classList.add('correct');
@@ -416,8 +421,7 @@ function suffle(arr) {
 
 function updateScore(total) {
 
-	
-		document.querySelector('#score').innerHTML = `${++rightAnswers}/${total}`
+	document.querySelector('#score').innerHTML = `${++rightAnswers}/${total}`
 
 	return;
 }
