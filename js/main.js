@@ -113,7 +113,6 @@ function getQuiz() {
 				} else {
 					displayTrueFalse();
 				}
-
 				console.log(data);
       })
       .catch(err => {
@@ -133,7 +132,9 @@ function displayTrueFalse(){
 
 
 	document.querySelector('#question').innerHTML = quizQuestions[currentQuestion++];
-	document.querySelector('#count').innerHTML = `Question ${currentQuestion + 1} out of ${correctAnswers.length}`;
+	document.querySelector('#count').innerHTML = `Question ${currentQuestion} out of ${correctAnswers.length}`;
+
+
 
 	nextButton.addEventListener('click', e=> {
 		if(currentQuestion === quizQuestions.length - 2) {
@@ -146,6 +147,7 @@ function displayTrueFalse(){
 			answer1.disabled = true;
 			answer2.disabled = true;
 	
+		
 			document.querySelector('#final').innerHTML = `You scored a final score of ${rightAnswers}/${correctAnswers.length}. 
 				That's a ${(rightAnswers/correctAnswers.length) * 100}%! To play again, just refresh this page!`
 			playAgain.classList.remove('hidden');
@@ -153,8 +155,20 @@ function displayTrueFalse(){
 				location.reload(true);
 			})
 
-
 	}
+
+		answer1.disabled = false;
+		answer2.disabled = false;
+
+		answer1.classList.remove('correct');
+		answer2.classList.remove('correct');
+		answer1.classList.remove('incorrect');
+		answer2.classList.remove('incorrect');
+
+
+			document.querySelector('#question').innerHTML = quizQuestions[currentQuestion++];
+			document.querySelector('#count').innerHTML = `Question ${currentQuestion} out of ${correctAnswers.length}`;
+			answer1
 
 	})
 }
@@ -242,54 +256,88 @@ function displayQuestion() {
 
 // checkAnswer(currCorrectQuestion - 1, answerPosition[3], answerPosition);
 
+
 answer1.addEventListener('click', e => {
-	let answer = document.querySelector(`#answer${answerPosition[3]}`);
-	if(e.target.innerHTML === correctAnswers[currCorrectQuestion - 1]) {
-		console.log('reached 1');
-		answer1.classList.add('correct');
-		// answer2.classList.add('incorrect');
-		// answer3.classList.add('incorrect');
-		// answer4.classList.add('incorrect');
 
-		answer1.disabled = true;
-		answer2.disabled = true;
-		answer3.disabled = true;
-		answer4.disabled = true;
-		updateScore(correctAnswers.length, e);
+	if(type === 'boolean') {
+		
+		if(e.target.innerHTML === correctAnswers[currentQuestion]) {
+			answer1.classList.add('correct');
+			answer1.disabled = true;
+			answer2.disabled = true;
+		} else {
+			answer1.classList.add('incorrect');
+			answer2.classList.add('correct');
+			answer1.disabled = true;
+			answer2.disabled = true;
+		}
+
 	} else {
-		answer.classList.add('correct');
 		
-		document.querySelector(`#${e.target.id}`).classList.add('incorrect');
-
-		answer1.disabled = true;
-		answer2.disabled = true;
-		answer3.disabled = true;
-		answer4.disabled = true;
-		
+		let answer = document.querySelector(`#answer${answerPosition[3]}`);
+		if(e.target.innerHTML === correctAnswers[currCorrectQuestion - 1]) {
+			answer1.classList.add('correct');
+			// answer2.classList.add('incorrect');
+			// answer3.classList.add('incorrect');
+			// answer4.classList.add('incorrect');
+	
+			answer1.disabled = true;
+			answer2.disabled = true;
+			answer3.disabled = true;
+			answer4.disabled = true;
+			updateScore(correctAnswers.length, e);
+		} else {
+			answer.classList.add('correct');
+			
+			document.querySelector(`#${e.target.id}`).classList.add('incorrect');
+	
+			answer1.disabled = true;
+			answer2.disabled = true;
+			answer3.disabled = true;
+			answer4.disabled = true;
+			
+		}
 	}
+
 })
 
 answer2.addEventListener('click', e => {
-	let answer = document.querySelector(`#answer${answerPosition[3]}`);
-	if(e.target.innerHTML === correctAnswers[currCorrectQuestion - 1]) {
-		console.log('reached 2');
-		answer2.classList.add('correct');
+	if(type === 'boolean') {
 
-		answer1.disabled = true;
-		answer2.disabled = true;
-		answer3.disabled = true;
-		answer4.disabled = true;
-		updateScore(correctAnswers.length, e);
+		if(e.target.innerHTML === correctAnswers[currentQuestion]) {
+			answer2.classList.add('correct');
+			answer1.disabled = true;
+			answer2.disabled = true;
+		} else {
+			answer2.classList.add('incorrect');
+			answer1.classList.add('correct');
+			answer1.disabled = true;
+			answer2.disabled = true;
+		}
+
 	} else {
-		answer.classList.add('correct');
-		
-		document.querySelector(`#${e.target.id}`).classList.add('incorrect');
+		let answer = document.querySelector(`#answer${answerPosition[3]}`);
+		if(e.target.innerHTML === correctAnswers[currCorrectQuestion - 1]) {
+			console.log('reached 2');
+			answer2.classList.add('correct');
+	
+			answer1.disabled = true;
+			answer2.disabled = true;
+			answer3.disabled = true;
+			answer4.disabled = true;
+			updateScore(correctAnswers.length, e);
+		} else {
+			answer.classList.add('correct');
+			
+			document.querySelector(`#${e.target.id}`).classList.add('incorrect');
+	
+			answer1.disabled = true;
+			answer2.disabled = true;
+			answer3.disabled = true;
+			answer4.disabled = true;
+			
+		}
 
-		answer1.disabled = true;
-		answer2.disabled = true;
-		answer3.disabled = true;
-		answer4.disabled = true;
-		
 	}
 })
 
@@ -340,133 +388,8 @@ answer4.addEventListener('click', e => {
 	}
 })
 
-// function checkAnswer(index, corrAnsPos, arr) {
-
-// 	console.log(arr);
-// 	console.log(corrAnsPos);
-// 	let answerPosCopy = [...arr];
-// 	console.log(answerPosCopy);
-// 	let answer = '';
-
-// 	document.querySelector(`#answer${corrAnsPos}`).addEventListener('click', e => {
-// 		answer = document.querySelector(`#answer${corrAnsPos}`);
-// 		console.log(answer);
-// 		answer1.disabled = true;
-// 		answer2.disabled = true;
-// 		answer3.disabled = true;
-// 		answer4.disabled = true;
-// 		updateScore(correctAnswers.length, answer);
-// 	})
 
 
-
-// 	let correctIndex = answerPosCopy.indexOf(corrAnsPos);
-// 	answerPosCopy.splice(correctIndex, 1);
-// 	console.log(answerPosCopy);
-// 	for(let i = 0; i < answerPosCopy.length; i++) {
-// 		document.querySelector(`#answer${answerPosCopy[i]}`).addEventListener('click', e => {
-// 			if(e.target.innerHTML !== correctAnswers[index]) {
-// 				let wrong = document.querySelector(`#answer${answerPosCopy[i]}`);
-// 				wrong.classList.add('incorrect');
-// 				updateScore(correctAnswers.length, wrong)
-// 				document.querySelector(`#answer${corrAnsPos}`).classList.add('correct');
-// 				answer1.disabled = true;
-// 				answer2.disabled = true;
-// 				answer3.disabled = true;
-// 				answer4.disabled = true;
-// 			}
-// 		})
-// 	}
-
-
-
-	
-
-	// document.querySelector('#answer1').addEventListener('click', e => {
-
-	// 	answer1.disabled = true;
-	// 	answer2.disabled = true;
-	// 	answer3.disabled = true;
-	// 	answer4.disabled = true;
-
-	// 	if(e.target.innerHTML === correctAnswers[index]) {
-	// 		updateScore(correctAnswers.length, answer1);
-	// 		answer2.classList.add('incorrect');
-	// 		answer3.classList.add('incorrect');
-	// 		answer4.classList.add('incorrect');
-	// 	} else {
-	// 		if(!e.target.innerHTML !== document.querySelector(`#answer${corrAnsPos}`).innerHTML) {
-	// 			answer1.classList.add('incorrect');
-	// 			document.querySelector(`#answer${corrAnsPos}`).classList.add('correct');
-	// 			return;
-	// 		}
-	// 	}
-	// })
-
-	// document.querySelector('#answer2').addEventListener('click', e => {
-
-	// 	answer1.disabled = 'true';
-	// 	answer2.disabled = 'true';
-	// 	answer3.disabled = 'true';
-	// 	answer4.disabled = 'true';
-	
-	// 	if(e.target.innerHTML === correctAnswers[index]) {
-	// 		updateScore(correctAnswers.length, answer2);
-	// 		answer1.classList.add('incorrect');
-	// 		answer3.classList.add('incorrect');
-	// 		answer4.classList.add('incorrect');
-	// 	} else {
-	// 		if(!e.target.innerHTML !== document.querySelector(`#answer${corrAnsPos}`).innerHTML) {
-	// 			answer2.classList.add('incorrect');
-	// 			document.querySelector(`#answer${corrAnsPos}`).classList.add('correct');
-
-	// 		}
-	// 	}
-	// })
-
-
-	// document.querySelector('#answer3').addEventListener('click', e => {
-
-	// 	answer1.disabled = 'true';
-	// 	answer2.disabled = 'true';
-	// 	answer3.disabled = 'true';
-	// 	answer4.disabled = 'true';
-	
-	// 	if(e.target.innerHTML === correctAnswers[index]) {
-	// 		updateScore(correctAnswers.length, answer3);
-	// 		answer1.classList.add('incorrect');
-	// 		answer2.classList.add('incorrect');
-	// 		answer4.classList.add('incorrect');
-	// 	}else {
-	// 		if(!e.target.innerHTML !== document.querySelector(`#answer${corrAnsPos}`).innerHTML) {
-	// 			answer3.classList.add('incorrect');
-	// 			document.querySelector(`#answer${corrAnsPos}`).classList.add('correct');
-
-	// 		}
-	// 	}
-	// })
-
-
-	// document.querySelector('#answer4').addEventListener('click', e => {
-
-	// 	answer1.disabled = 'true';
-	// 	answer2.disabled = 'true';
-	// 	answer3.disabled = 'true';
-	// 	answer4.disabled = 'true';
-	
-	// 	if(e.target.innerHTML === correctAnswers[index]) {
-	// 		updateScore(correctAnswers.length, answer4);
-	// 		answer1.classList.add('incorrect');
-	// 		answer2.classList.add('incorrect');
-	// 		answer3.classList.add('incorrect');
-	// 	}else {
-	// 		if(!e.target.innerHTML !== document.querySelector(`#answer${corrAnsPos}`).innerHTML) {
-	// 			answer4.classList.add('incorrect');
-	// 			document.querySelector(`#answer${corrAnsPos}`).classList.add('correct');
-
-	// 		}
-	// 	}
-	// })
 
 
 
@@ -489,11 +412,9 @@ function suffle(arr) {
   return arr ;
 }
 
-function updateScore(total) {
 
-	// if(num === 0) {
-	// 	document.querySelector('#score').innerHTML = `${rightAnswers}/${total}`
-	// }
+
+function updateScore(total) {
 
 	
 		document.querySelector('#score').innerHTML = `${++rightAnswers}/${total}`
