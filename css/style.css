@@ -24,3 +24,17 @@ img{
 /******************************************
 /* ADDITIONAL STYLES
 /*******************************************/
+
+.correct {
+  background-color: green;
+  color: white;
+}
+
+.incorrect {
+  background: red;
+  color: white;
+}
+
+.hidden {
+  display: none;
+}
