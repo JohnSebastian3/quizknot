@@ -80,6 +80,9 @@ document.querySelector('#generate').addEventListener('click', getQuiz);
 
 
 function getQuiz() {
+
+	
+	
 	document.querySelector('#generate').disabled = true;
 	const numQuestions = document.querySelector('#num-questions').value;
 	console.log(numQuestions);
@@ -88,6 +91,7 @@ function getQuiz() {
 	} else {
 		type = 'multiple'
 	}
+
 
 
 
@@ -119,13 +123,50 @@ function getQuiz() {
 
 function displayTrueFalse(){
 	console.log(correctAnswers);
+	answer1.classList.remove('hidden');
+	answer2.classList.remove('hidden');
 	answer3.classList.add('hidden');
 	answer4.classList.add('hidden');
+	nextButton.classList.remove('hidden');
 	answer1.innerHTML = 'True';
 	answer2.innerHTML = 'False';
+
+
+	document.querySelector('#question').innerHTML = quizQuestions[currentQuestion++];
+	document.querySelector('#count').innerHTML = `Question ${currentQuestion + 1} out of ${correctAnswers.length}`;
+
+	nextButton.addEventListener('click', e=> {
+		if(currentQuestion === quizQuestions.length - 2) {
+			nextButton.innerHTML = 'Get Results';
+		}
+		
+		if(currentQuestion >= quizQuestions.length - 1) {
+			
+			nextButton.disabled = true;
+			answer1.disabled = true;
+			answer2.disabled = true;
+	
+			document.querySelector('#final').innerHTML = `You scored a final score of ${rightAnswers}/${correctAnswers.length}. 
+				That's a ${(rightAnswers/correctAnswers.length) * 100}%! To play again, just refresh this page!`
+			playAgain.classList.remove('hidden');
+			playAgain.addEventListener('click', e => {
+				location.reload(true);
+			})
+
+
+	}
+
+	})
 }
 
+
 function displayQuestion() {
+
+	answer1.classList.remove('hidden');
+	answer2.classList.remove('hidden');
+	answer3.classList.remove('hidden');
+	answer4.classList.remove('hidden');
+	nextButton.classList.remove('hidden');
 
 	
 	 console.log(incorrectAnswers);
